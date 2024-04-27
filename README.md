@@ -7,9 +7,10 @@
 
 ## Setting Up Spotify and album.js:
 - Set up Spotify for developers account and start a new app
+- Give the app a name and description
+- Make the Redirect URL: http://localhost:8888/callback
 - Go to settings
 - Take note of the Client ID and Client Secret
-- Make the Redirect URL: http://localhost:8888/callback
 - Save the settings
 - Download the album.js file and move to a folder
 - in the same folder as album.js, make a file called .env
