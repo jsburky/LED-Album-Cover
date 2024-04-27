@@ -18,7 +18,7 @@
 - - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Make sure node js and npm are installed and working
 - Install these dependencies using npm install MODULE_NAME
-- - express
+  - express
   - axios
   - child_process
   - fs
@@ -26,6 +26,6 @@
   - sharp
   - dotenv
 - Running the code with node album.js should produce two files:
-- - A .jpg of the album cover of the song playing
+  - A .jpg of the album cover of the song playing
   - A 128x128 of the album cover of the song playing
 - The album cover should update whenever the song changes
