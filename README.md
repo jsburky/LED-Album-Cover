@@ -1,4 +1,4 @@
-# LED-Album-Cover
+# LED Album Cover
 ## Parts Needed:
 - [Adafruit 64x64 display](https://www.adafruit.com/product/5362)
 - [Raspberry Pi Bonnet](https://www.adafruit.com/product/3211)
