@@ -14,8 +14,8 @@
 - Download the album.js file and move to a folder
 - in the same folder as album.js, make a file called .env
 - In .env add two lines
-- - CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'
-- - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
+  - CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'
+  - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Make sure node js and npm are installed and working
 - Install these dependencies using npm install MODULE_NAME
   - express
