@@ -25,7 +25,7 @@ class GraphicsTest(SampleBase):
                     index = i * 64 + j
                     r, g, b = rgb_values[index]
                     self.matrix.SetPixel(j, i, r, g, b)  # Set RGB values from rgb_values
-            time.sleep(0.05)  # Adjust this value to change display speed
+            time.sleep(1)  # Adjust this value to change display speed
 
 # Main function
 if __name__ == "__main__":
