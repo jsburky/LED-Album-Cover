@@ -47,9 +47,9 @@
 ## Setting Up Python Code:
 - Install these dependencies using sudo apt install python3-MODULE_NAME
   - flask
-  - subprocess
+  - requests
   - psutil
-  - signal
+  - dotenv
 - The rest should come installed with python on Raspberry Pi but, if you get an error install it using the same method
 - Navigate to the sample folder with cd ~/rpi-rgb-led-matrix/bindings/python/samples
 - in this folder create album.py and image_show.py and copy the respective code from this repo
