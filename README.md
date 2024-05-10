@@ -63,7 +63,7 @@
 
 ## Running The Program:
 - Make sure you are in the samples folder by typing cd ~/rpi-rgb-led-matrix/bindings/python/samples
-- run sudo python album.py
+- Run: sudo python album.py
 - On another device, in a browser, visit http://LOCAL_IP:8888/authorize and log in to Spotify.
 - Once Spotify is playing, the album cover should be displayed on the matrix
 - Please leave comments for errors and improvements.
