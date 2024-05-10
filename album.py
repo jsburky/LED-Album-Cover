@@ -12,6 +12,10 @@ import psutil
 
 command = ["sudo", "python", "image_show.py", "--led-rows=64", "--led-cols=64", "--led-slowdown-gpio=4"]
 
+instructions = ["sudo", "python", "address_display.py", "--led-rows=64", "--led-cols=64", "--led-slowdown-gpio=4"]
+
+address_display = subprocess.Popen(instructions)
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -159,6 +163,7 @@ def callback():
 
             threading.Thread(target=check_loop).start()
             start_image_show()  # Start the image_show.py subprocess
+            address_display.terminate()
             return 'Authorization complete. You can close this window.'
 
         except Exception as e:
