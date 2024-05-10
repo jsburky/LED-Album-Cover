@@ -23,9 +23,9 @@
   - curl https://raw.githubusercontent.com/adafruit/Raspberry-Pi-Installer-Scripts/main/rgb-matrix.sh >rgb-matrix.sh
   - then: sudo bash rgb-matrix.sh
 - This will bring you to a setup menu for the library. The settings you want are:
-  - Continue? y
-  - 1. Adafruit RGB Matrix Bonnet
-  - 1. Quality
+  - Continue?: y
+  - Adafruit RGB Matrix Bonnet: 1
+  - Quality: 1
 - Confirm Settings and answer yes to reboot after installation
 - navigate to config.txt file with sudo nano /boot/firmware/config.txt
 - Set dtparam=audio=off and save file with ctrl o then exit with ctrl x
