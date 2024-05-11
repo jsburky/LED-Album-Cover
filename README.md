@@ -8,9 +8,13 @@
 ## Setting Up Raspberry Pi
 - For help with the next steps look [here](https://learn.adafruit.com/adafruit-rgb-matrix-plus-real-time-clock-hat-for-raspberry-pi/driving-matrices)
 - First, on the Raspberry Pi Bonnet solder the E pad to the 8 pad it should look like this:
+![Raspberry Pi Bonnet E Pad to 8 Pad Short](/images/E8_Short.jpg)
 - Next, solder a jumper wire between GPIO 4 and GPIO 18. This will reduce the flicker. It should look like this:
+![Raspberry Pi Bonnet GPIO 4 to GPIO 18 Short](/images/GPIO_Short.jpg)
 - Next, you want to plug in the power cable and ribbon cable to the led screen like this:
+![Matrix Panel Wiring](/images/Panel_Wires.jpg)
 - Then, cut off the other end of the power cable and attach to bonnet like this:
+![Raspberry Pi Bonnet 5V Out](/images/5V_Out.jpg)
 - Connect ribbon cable to bonnet.
 - Use the [Raspberry Pi Imager](https://www.raspberrypi.com/software/) to flash Raspberry Pi OS Lite (64/32 bit depending on which Pi is being used) to an SD Card. I would recommend going through the settings to set up a hostname, wifi, username and password, and enable ssh
 - Insert SD Card in Pi
