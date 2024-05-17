@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=simple
-WorkingDirectory=/ledboard/rpi-rgb-led-matrix/bindings/python/samples
+WorkingDirectory=/home/PI_USERNAME/rpi-rgb-led-matrix/bindings/python/samples
 ExecStart=sudo python3 main.py
 
 [Install]
