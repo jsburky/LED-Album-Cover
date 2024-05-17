@@ -27,6 +27,7 @@ class GraphicsTest(SampleBase):
             graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 4, white, LOCAL_IP)
             graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 5, white, PORT)
             graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 6, white, "/authorize")
+            time.sleep(1)
 
 # Main function
 if __name__ == "__main__":
