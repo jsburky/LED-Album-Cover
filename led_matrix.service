@@ -1,0 +1,11 @@
+[Unit]
+Description=LED Matrix
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/ledboard/rpi-rgb-led-matrix/bindings/python/samples
+ExecStart=sudo python3 main.py
+
+[Install]
+WantedBy=multi-user.target
