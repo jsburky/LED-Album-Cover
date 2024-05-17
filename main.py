@@ -10,8 +10,8 @@ dev = InputDevice('/dev/input/event#')
 command_mapping = {
     '0': None,  # No command for '0'
     '1': 'sudo python album.py',
-    '2': 'command2',
-    '3': 'command3',
+    # '2': 'command2',
+    # '3': 'command3',
     # Add more commands as needed
 }
 
