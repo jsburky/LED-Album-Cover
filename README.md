@@ -83,6 +83,17 @@
   - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Then save file with ctrl o and exit with ctrl x
 
+## Optional: Running from boot with keyboard input
+- This allows for the code the be run without a monitor or ssh
+- Install evdev using sudo apt install python3-evdev
+- In the same directory as the rest of the scripts, create main.py by typing nano main.py
+- Copy the code from the file on gitub
+- Change the event# to the event of the keyboard you plugged in. For me, this was event 0
+  - Use ls /dev/input/ to find the curent events
+  - Run ls /dev/input/ before and after plugging in the keyboard to see which events get added
+- After changing the code, run sudo main.py and press 1 to run the album.py file.
+- 0 terminates the code that is running
+
 ## Running The Program:
 - Make sure you are in the samples folder by typing cd ~/rpi-rgb-led-matrix/bindings/python/samples
 - Run: sudo python album.py
