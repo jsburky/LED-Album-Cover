@@ -2,7 +2,7 @@ from evdev import InputDevice, categorize, ecodes
 import subprocess
 import threading
 
-# Find the event for your USB keypad (use `ls /dev/input/ to list input devices)
+# Find the event for your USB keypad (use ls /dev/input/ to list input devices)
 # Replace '/dev/input/eventX' with the appropriate event number for your keypad
 dev = InputDevice('/dev/input/event#')
 
