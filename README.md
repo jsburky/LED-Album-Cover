@@ -93,7 +93,25 @@
   - Run ls /dev/input/ before and after plugging in the keyboard to see which events get added
 - After changing the code, run sudo main.py and press 1 to run the album.py file.
 - 0 terminates the code that is running
+- Type: sudo nano /etc/systemd/system/led_matrix.service
+- Add:
+[Unit]
+Description=My Python Script
+After=multi-user.target
 
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/rpi-rgb-led-matrix/bindings/python/samples
+ExecStart=sudo python3 main.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+- run: sudo systemctl daemon-reload
+- run: sudo systemctl enable myscript.service
+- run: sudo reboot
 ## Running The Program:
 - Make sure you are in the samples folder by typing cd ~/rpi-rgb-led-matrix/bindings/python/samples
 - Run: sudo python album.py
