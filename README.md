@@ -83,7 +83,7 @@
   - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Then save file with ctrl o and exit with ctrl x
 
-## Optional: Running from boot with keyboard input
+## Optional: Running from boot with keyboard input (DO NOT USE- WORK IN PROGRESS)
 - This allows for the code the be run without a monitor or ssh
 - Install evdev using sudo apt install python3-evdev
 - In the same directory as the rest of the scripts, create main.py by typing nano main.py
