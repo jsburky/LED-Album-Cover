@@ -4,7 +4,7 @@
 - [Raspberry Pi Bonnet](https://www.adafruit.com/product/3211)
 - 5V 4A Power Supply for 64x64 or 5V 15A for 128x128
 - Raspberry Pi (zero - 4) Would recommend a 4 for better peformance 
-
+- A computer with ssh capability. This can be done by connecting a monitor to the Pi but, it is easier with ssh because you can copy over code from this repository
 ## Setting Up Raspberry Pi
 - For help with the next steps look [here](https://learn.adafruit.com/adafruit-rgb-matrix-plus-real-time-clock-hat-for-raspberry-pi/driving-matrices)
 - First, on the Raspberry Pi Bonnet solder the E pad to the 8 pad it should look like this:
