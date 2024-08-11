@@ -4,14 +4,12 @@ import threading
 
 # Find the event for your USB keypad (use ls /dev/input/ to list input devices)
 # Replace '/dev/input/eventX' with the appropriate event number for your keypad
-dev = InputDevice('/dev/input/event#')
+dev = InputDevice('/dev/input/eventX')
 
 # Define the commands corresponding to each key
 command_mapping = {
-    '0': None,  # No command for '0'
-    '1': 'sudo python album.py',
-    # '2': 'command2',
-    # '3': 'command3',
+    '0': '/home/ledboard/shutdown_services.sh',
+    '1': 'sudo python3 /home/ledboard/rpi-rgb-led-matrix/bindings/python/samples/album.py',
     # Add more commands as needed
 }
 
@@ -28,7 +26,11 @@ def execute_command(key):
         current_process = None
 
     if command is not None:
-        current_process = subprocess.Popen(command.split())
+        # If the command is the shutdown script, execute it directly
+        if key == '0':
+            subprocess.Popen(command, shell=True)
+        else:
+            current_process = subprocess.Popen(command.split())
 
 # Define a function to read input from the keypad
 def read_keypad():
