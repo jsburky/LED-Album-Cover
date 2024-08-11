@@ -70,12 +70,14 @@
   - requests
   - psutil
   - dotenv
+  - qrcode
+  - numpy
 - The rest should come installed with python on Raspberry Pi but, if you get an error install it using the same method
 - Navigate to the sample folder with cd ~/rpi-rgb-led-matrix/bindings/python/samples
 - in this folder create album.py, image_show.py, and address_display.py and copy the respective code from this repo
 - In album.py edit the variable LOCAL_IP to match the local ip of your Pi
-- In address_display.py update the LOCAL_IP to the ip and the WIFI to the network the Pi is on
-  - This step is really optional but it shows the wifi network to connect to and the url
+- In address_display.py update the LOCAL_IP to the ip 
+  - This step is really optional but it shows a qr code to connect to the display
 - Then save file with ctrl o and exit with ctrl x
 - in the same folder create a file called .env by typing nano .env
 - In .env add two lines
