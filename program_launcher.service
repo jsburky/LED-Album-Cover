@@ -1,0 +1,13 @@
+[Unit]
+Description=Program Launcher Service
+After=network.target
+
+[Service]
+WorkingDirectory=/home/ledboard/rpi-rgb-led-matrix/bindings/python/samples
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
