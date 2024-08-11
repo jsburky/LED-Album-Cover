@@ -83,7 +83,7 @@
   - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Then save file with ctrl o and exit with ctrl x
 
-## Optional: Running from boot with keyboard input (DO NOT USE- WORK IN PROGRESS)
+## Running from boot with keyboard input 
 - This allows for the code the be run without a monitor or ssh
 - Install evdev using sudo apt install python3-evdev
 - In the same directory as the rest of the scripts, create main.py by typing nano main.py
@@ -93,26 +93,18 @@
   - Run ls /dev/input/ before and after plugging in the keyboard to see which events get added
 - After changing the code, run sudo main.py and press 1 to run the album.py file.
 - 0 terminates the code that is running
-- Type: sudo nano /etc/systemd/system/led_matrix.service
-- Add:
-[Unit]
-Description=My Python Script
-After=multi-user.target
-
-[Service]
-Type=simple
-WorkingDirectory=/home/pi/rpi-rgb-led-matrix/bindings/python/samples
-ExecStart=sudo python3 main.py
-Restart=always
-RestartSec=10
-
-[Install]
-WantedBy=multi-user.target
-
+- Type: sudo nano /etc/systemd/system/program_launcher.service
+  - Copy over the contents of the file: program_launcher.service
+  - Then save file with ctrl o and exit with ctrl x
+- Go to the home directory with cd ~
+- Type sudo nano shutdown_services.sh
+  - Copy over the contents of the file: shutdown_services.sh
+  - Then save file with ctrl o and exit with ctrl x
 - run: sudo systemctl daemon-reload
-- run: sudo systemctl enable myscript.service
+- run: sudo systemctl start program_launcher.service
+- run: sudo systemctl enable program_launcher.service
 - run: sudo reboot
-## Running The Program:
+## Running The Program (With ssh or a monitor):
 - Make sure you are in the samples folder by typing cd ~/rpi-rgb-led-matrix/bindings/python/samples
 - Run: sudo python album.py
 - On another device, in a browser, visit http://LOCAL_IP:8888/authorize and log in to Spotify.
