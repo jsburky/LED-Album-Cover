@@ -2,31 +2,56 @@
 from samplebase import SampleBase
 from rgbmatrix import graphics
 import time
+import qrcode
+import numpy as np
 
 class GraphicsTest(SampleBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsTest, self).__init__(*args, **kwargs)
 
     def run(self):
-        LOCAL_IP = '192.168.1.###'
+        LOCAL_IP = 'LOCAL_IP'
         PORT = ':8888'
-        WIFI = 'WIFI'
         canvas = self.matrix
-        font = graphics.Font()
-        font.LoadFont("../../../fonts/5x8.bdf")
-        WIDTH = 5
-        HEIGHT = 8
 
-        white = graphics.Color(255, 255, 255)
+        img = qrcode.make(LOCAL_IP + PORT + '/authorize')
+        # Generate a QR code
+        qr = qrcode.QRCode(
+            version=6,  # Adjust to ensure the QR code is 64x64
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=1,
+            border=0,
+        )
+        data = LOCAL_IP + PORT + "/authorize"  # Replace with your desired data
+        qr.add_data(data)
+        qr.make(fit=True)
+
+        # Create an image from the QR code
+        img = qr.make_image(fill='black', back_color='white')
+
+        # Resize the image to 64x64 pixels
+        img = img.resize((64, 64))
+
+        # Convert image to a numpy array
+        img_array = np.array(img)
+
+        # Convert the numpy array to a list of lists with '1' for black and '0' for white
+        qr_code_list = [['1' if pixel == 0 else '0' for pixel in row] for row in img_array]
+
+        # The qr_code_list now holds the 64x64 array in memory
+        # print(qr_code_list)
+        
         while True:
-            canvas.Clear()
-            graphics.DrawText(canvas, font, 2, 10, white, "WiFi: ")
-            graphics.DrawText(canvas, font, 2, 10 + HEIGHT, white, WIFI)
-            graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 2, white, "Address:")
-            # graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 3, white, "http://")
-            graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 4, white, LOCAL_IP)
-            graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 5, white, PORT)
-            graphics.DrawText(canvas, font, 2, 10 + HEIGHT * 6, white, "/authorize")
+            for i in range(64):
+                for j in range(64):
+                    pixel_value = qr_code_list[i][j]
+
+                    if pixel_value == '1':
+                        r, g, b = 0, 0, 0
+                    else:
+                        r, g, b = 255, 255, 255
+
+                    self.matrix.SetPixel(j, i, r, g, b)
             time.sleep(1)
 
 # Main function
