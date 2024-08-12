@@ -14,7 +14,7 @@ class GraphicsTest(SampleBase):
         PORT = ':8888'
         canvas = self.matrix
 
-        img = qrcode.make(LOCAL_IP + PORT + '/authorize')
+        img = qrcode.make('http://' + LOCAL_IP + PORT + '/authorize')
         # Generate a QR code
         qr = qrcode.QRCode(
             version=6,  # Adjust to ensure the QR code is 64x64
