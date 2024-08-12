@@ -14,7 +14,6 @@ class GraphicsTest(SampleBase):
         PORT = ':8888'
         canvas = self.matrix
 
-        img = qrcode.make('http://' + LOCAL_IP + PORT + '/authorize')
         # Generate a QR code
         qr = qrcode.QRCode(
             version=6,  # Adjust to ensure the QR code is 64x64
@@ -22,7 +21,7 @@ class GraphicsTest(SampleBase):
             box_size=1,
             border=0,
         )
-        data = LOCAL_IP + PORT + "/authorize"  # Replace with your desired data
+        data = 'http://' + LOCAL_IP + PORT + "/authorize"  # Replace with your desired data
         qr.add_data(data)
         qr.make(fit=True)
 
