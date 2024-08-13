@@ -28,15 +28,23 @@ class GraphicsTest(SampleBase):
 
             # Adjust these values based on your display size
             x_pos = 10  # x position of the text
-            y_pos = 15  # y position of the baseline of the text
+            y_pos = 14  # y position of the baseline of the text
 
             # Draw the time on the canvas
             graphics.DrawText(canvas, font, x_pos, y_pos, white, display)
             graphics.DrawLine(canvas, 0, 18, 64, 18, white)
-            graphics.DrawLine(canvas, 32, 18, 32, 64, white)
+            graphics.DrawLine(canvas, 0, 45, 64, 45, white)
+            graphics.DrawLine(canvas, 32, 18, 32, 45, white)
+
+            month = now.strftime("%b").upper()
+            day = now.strftime("%d")
+            # year = now.strftime("%y")
+            graphics.DrawText(canvas, font, 35, 31, white, month)
+            graphics.DrawText(canvas, font, 40, 43, white, day)
+            # graphics.DrawText(canvas, font, 40, 60, white, year)
             # Pause for a second
             time.sleep(1)
-
+            
 # Main function
 if __name__ == "__main__":
     graphics_test = GraphicsTest()
