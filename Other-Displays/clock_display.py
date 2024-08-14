@@ -13,7 +13,6 @@ class GraphicsTest(SampleBase):
         super(GraphicsTest, self).__init__(*args, **kwargs)
         self.weather_api_key = "API_KEY"  # Replace with your actual API key
 
-    # Weather API: https://openweathermap.org/
     def get_location(self):
         try:
             response = requests.get('https://ipinfo.io/')
@@ -26,7 +25,7 @@ class GraphicsTest(SampleBase):
 
     def get_temperature(self, lat, lon):
         try:
-            weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid={self.weather_api_key}"
+            weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=imperial&appid={self.weather_api_key}"
             response = requests.get(weather_url)
             data = response.json()
             temperature = data['main']['temp']
@@ -38,55 +37,50 @@ class GraphicsTest(SampleBase):
     def run(self):
         canvas = self.matrix
         font = graphics.Font()
-
-        # Load the font; make sure the path is correct
         font.LoadFont("../../../fonts/9x18B.bdf")  # Adjust the path if necessary
 
         white = graphics.Color(255, 255, 255)
-        temperature = None
         lat, lon = self.get_location()
+        last_temperature = None
+        last_display = None
 
         while True:
-            canvas.Clear()
-
             now = datetime.now()
             display = now.strftime("%I:%M")
-            print(display)
-
-            # Adjust these values based on your display size
-            x_pos = 10  # x position of the text
-            y_pos = 14  # y position of the baseline of the text
-
-            # Draw the time on the canvas
-            graphics.DrawText(canvas, font, x_pos, y_pos, white, display)
-            graphics.DrawLine(canvas, 0, 18, 64, 18, white)
-            graphics.DrawLine(canvas, 0, 45, 64, 45, white)
-            graphics.DrawLine(canvas, 32, 18, 32, 45, white)
-
             month = now.strftime("%b").upper()
             day = now.strftime("%d")
-            # year = now.strftime("%y")
-            graphics.DrawText(canvas, font, 35, 31, white, month)
-            graphics.DrawText(canvas, font, 40, 43, white, day)
-            # graphics.DrawText(canvas, font, 40, 60, white, year)
 
-            # Fetch temperature if not already fetched
-            if not temperature and lat and lon:
+            # Fetch the temperature
+            if lat and lon:
                 temperature = self.get_temperature(lat, lon)
-
-            # Format the temperature display
-            if temperature is not None:
-                temp_display = f"{round(temperature)}°"  # Convert to string with rounded value
+                if temperature is not None:
+                    temp_display = f"{round(temperature)}°"
+                    if last_temperature != temp_display:
+                        last_temperature = temp_display
+                        temperature_changed = True
+                    else:
+                        temperature_changed = False
+                else:
+                    temp_display = "N/A"
+                    temperature_changed = True
             else:
                 temp_display = "N/A"
+                temperature_changed = True
 
-            # Display temperature if within the range
-            if temperature is not None and -10 < temperature < 100:
+            # Redraw only if something has changed
+            if last_display != (display, month, day, temp_display):
+                canvas.Clear()
+                graphics.DrawText(canvas, font, 10, 14, white, display)
+                graphics.DrawLine(canvas, 0, 18, 64, 18, white)
+                graphics.DrawLine(canvas, 0, 45, 64, 45, white)
+                graphics.DrawLine(canvas, 32, 18, 32, 45, white)
+                graphics.DrawText(canvas, font, 35, 31, white, month)
+                graphics.DrawText(canvas, font, 40, 43, white, day)
                 graphics.DrawText(canvas, font, 3, 37, white, temp_display)
-            else:
-                graphics.DrawText(canvas, font, 3, 37, white, temp_display)  # Adjust position if needed
+                last_display = (display, month, day, temp_display)
 
-            time.sleep(1)
+            # Sleep before next update
+            time.sleep(1)  # Adjust as needed
 
 # Main function
 if __name__ == "__main__":
