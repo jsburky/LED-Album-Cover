@@ -28,7 +28,7 @@ class GraphicsTest(SampleBase):
             weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=imperial&appid={self.weather_api_key}"
             response = requests.get(weather_url)
             data = response.json()
-            temperature = data['main']['temp']
+            temperature = float(data['main']['temp'])
             return temperature
         except Exception as e:
             print("Error fetching weather data:", e)
