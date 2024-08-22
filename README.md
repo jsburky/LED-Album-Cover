@@ -103,6 +103,7 @@
   - Copy over the contents of the file: shutdown_services.sh
   - Then save file with ctrl o and exit with ctrl x
 - run: sudo systemctl daemon-reload
+- run: sudo chmod +x /home/ledboard/shutdown_services.sh
 - run: sudo systemctl start program_launcher.service
 - run: sudo systemctl enable program_launcher.service
 - run: sudo reboot
