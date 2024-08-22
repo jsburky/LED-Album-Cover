@@ -5,9 +5,6 @@ import time
 from datetime import datetime
 import requests
 
-# To run add: 'sudo python /home/ledboard/rpi-rgb-led-matrix/bindings/python/samples/time.py --led-rows=64 --led-cols=64 --led-slowdown-gpio=4',
-# To main.py under the number to select
-
 class GraphicsTest(SampleBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsTest, self).__init__(*args, **kwargs)
@@ -35,14 +32,21 @@ class GraphicsTest(SampleBase):
             return None
 
     def run(self):
+        # Create two canvases: one for the display and one for the buffer
         canvas = self.matrix
-        font = graphics.Font()
-        font.LoadFont("../../../fonts/9x18B.bdf")  # Adjust the path if necessary
+        buffer = self.matrix.CreateFrameCanvas()
+
+        top_font = graphics.Font()
+        top_font.LoadFont("../../../fonts/9x18B.bdf")  # Adjust the path if necessary
+
+        ticker_font = graphics.Font()
+        ticker_font.LoadFont("../../../fonts/6x10.bdf")
+        ticker_text = "Sample News Ticker: Scrolling Text Here! " * 3  # Adjust text as needed
+        ticker_x = buffer.width
 
         white = graphics.Color(255, 255, 255)
         lat, lon = self.get_location()
         last_temperature = None
-        last_display = None
 
         while True:
             now = datetime.now()
@@ -50,37 +54,29 @@ class GraphicsTest(SampleBase):
             month = now.strftime("%b").upper()
             day = now.strftime("%d")
 
-            # Fetch the temperature
-            if lat and lon:
-                temperature = self.get_temperature(lat, lon)
-                if temperature is not None:
-                    temp_display = f"{round(temperature)}°"
-                    if last_temperature != temp_display:
-                        last_temperature = temp_display
-                        temperature_changed = True
-                    else:
-                        temperature_changed = False
-                else:
-                    temp_display = "N/A"
-                    temperature_changed = True
-            else:
-                temp_display = "N/A"
-                temperature_changed = True
+            # Draw on the buffer
+            buffer.Clear()
 
-            # Redraw only if something has changed
-            if last_display != (display, month, day, temp_display):
-                canvas.Clear()
-                graphics.DrawText(canvas, font, 10, 14, white, display)
-                graphics.DrawLine(canvas, 0, 18, 64, 18, white)
-                graphics.DrawLine(canvas, 0, 45, 64, 45, white)
-                graphics.DrawLine(canvas, 32, 18, 32, 45, white)
-                graphics.DrawText(canvas, font, 35, 31, white, month)
-                graphics.DrawText(canvas, font, 40, 43, white, day)
-                graphics.DrawText(canvas, font, 3, 37, white, temp_display)
-                last_display = (display, month, day, temp_display)
+            # Draw the top portion of the display
+            graphics.DrawText(buffer, top_font, 10, 14, white, display)
+            graphics.DrawLine(buffer, 0, 18, 64, 18, white)
+            graphics.DrawLine(buffer, 0, 45, 64, 45, white)
+            graphics.DrawLine(buffer, 32, 18, 32, 45, white)
+            graphics.DrawText(buffer, top_font, 35, 31, white, month)
+            graphics.DrawText(buffer, top_font, 40, 43, white, day)
+            graphics.DrawText(buffer, top_font, 3, 37, white, last_temperature if last_temperature else "N/A")
 
-            # Sleep before next update
-            time.sleep(1)  # Adjust as needed
+            # Draw the bottom portion (ticker text)
+            graphics.DrawText(buffer, ticker_font, ticker_x, 59, white, ticker_text)
+            ticker_x -= 1
+            if ticker_x < -len(ticker_text) * 6:  # Adjust width as needed
+                ticker_x = buffer.width
+
+            # Swap buffer with canvas to update display
+            buffer = self.matrix.SwapOnVSync(buffer)
+
+            # Sleep for 1 second to refresh the entire screen
+            time.sleep(0.05)
 
 # Main function
 if __name__ == "__main__":
