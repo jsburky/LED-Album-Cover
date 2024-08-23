@@ -2,15 +2,22 @@
 from samplebase import SampleBase
 from rgbmatrix import graphics
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
+import threading
 
 class GraphicsTest(SampleBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsTest, self).__init__(*args, **kwargs)
-        self.weather_api_key = "API_KEY"  # Replace with your actual API key
-        self.alpha_vantage_key = "YOUR_ALPHA_VANTAGE_API_KEY"  # Replace with your Alpha Vantage API key
-        self.stock_symbols = ["AAPL", "GOOGL", "MSFT"]  # Add your stock symbols here
+        self.weather_api_key = "YOUR_WEATHER_API_KEY"  # Replace with your actual Weather API key
+        self.polygon_api_key = "YOUR_POLYGON_API_KEY"  # Replace with your Polygon.io API key
+        self.stock_symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NFLX", "BA"]  # Add your stock symbols here
+        self.stock_prices = {symbol: None for symbol in self.stock_symbols}  # Initialize cache
+        self.last_update_times = {symbol: None for symbol in self.stock_symbols}  # Track last update times for each stock
+        self.update_interval = timedelta(minutes=1)  # Update interval for each stock
+        self.update_thread = threading.Thread(target=self.schedule_updates)
+        self.update_thread.daemon = True
+        self.update_thread.start()
 
     def get_location(self):
         try:
@@ -33,22 +40,39 @@ class GraphicsTest(SampleBase):
             print("Error fetching weather data:", e)
             return None
 
-    def get_stock_data(self):
+    def update_stock_price(self, symbol):
         try:
-            stock_data = []
-            for symbol in self.stock_symbols:
-                response = requests.get(f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=1min&apikey={self.alpha_vantage_key}")
-                data = response.json()
-                if "Time Series (1min)" in data:
-                    latest_time = list(data["Time Series (1min)"].keys())[0]
-                    price = data["Time Series (1min)"][latest_time]["1. open"]
-                    stock_data.append(f"{symbol}: ${float(price):.2f}")
-                else:
-                    stock_data.append(f"{symbol}: N/A")
-            return " | ".join(stock_data)
+            url = f'https://api.polygon.io/v2/aggs/ticker/{symbol}/prev'
+            params = {
+                'apiKey': self.polygon_api_key
+            }
+            response = requests.get(url, params=params)
+            data = response.json()
+            if 'results' in data and len(data['results']) > 0:
+                # Fetch the most recent end-of-day data
+                recent_data = data['results'][0]
+                price = recent_data['c']
+                self.stock_prices[symbol] = f"{symbol}: ${float(price):.2f}"
+            else:
+                self.stock_prices[symbol] = f"{symbol}: N/A"
+            self.last_update_times[symbol] = datetime.now()
         except Exception as e:
-            print("Error fetching stock data:", e)
-            return "Stock data unavailable"
+            print(f"Error fetching stock data for {symbol}: {e}")
+            self.stock_prices[symbol] = f"{symbol}: N/A"
+
+    def schedule_updates(self):
+        while True:
+            for symbol in self.stock_symbols:
+                last_update_time = self.last_update_times[symbol]
+                if last_update_time is None or datetime.now() - last_update_time >= self.update_interval:
+                    self.update_stock_price(symbol)
+                    # Respect the rate limit by sleeping between API calls
+                    time.sleep(60 / 5)  # 60 seconds divided by 5 requests
+            time.sleep(10)  # Small delay to prevent tight looping
+
+    def get_stock_data(self):
+        # Return cached stock prices, ensuring all values are strings
+        return " | ".join(price if price else f"{symbol}: N/A" for symbol, price in self.stock_prices.items())
 
     def run(self):
         # Create two canvases: one for the display and one for the buffer
@@ -66,9 +90,9 @@ class GraphicsTest(SampleBase):
         lat, lon = self.get_location()
         last_temperature = None
 
-        ticker_update_interval = 15  # Update ticker text every 15 seconds (15 seconds)
+        ticker_update_interval = 15  # Update ticker text every 15 seconds
         last_ticker_update = time.time()
-        
+
         ticker_text = self.get_stock_data()  # Initial ticker text
 
         while True:
