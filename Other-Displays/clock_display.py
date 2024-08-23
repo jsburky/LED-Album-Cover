@@ -9,6 +9,8 @@ class GraphicsTest(SampleBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsTest, self).__init__(*args, **kwargs)
         self.weather_api_key = "API_KEY"  # Replace with your actual API key
+        self.alpha_vantage_key = "YOUR_ALPHA_VANTAGE_API_KEY"  # Replace with your Alpha Vantage API key
+        self.stock_symbols = ["AAPL", "GOOGL", "MSFT"]  # Add your stock symbols here
 
     def get_location(self):
         try:
@@ -31,6 +33,23 @@ class GraphicsTest(SampleBase):
             print("Error fetching weather data:", e)
             return None
 
+    def get_stock_data(self):
+        try:
+            stock_data = []
+            for symbol in self.stock_symbols:
+                response = requests.get(f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={symbol}&interval=1min&apikey={self.alpha_vantage_key}")
+                data = response.json()
+                if "Time Series (1min)" in data:
+                    latest_time = list(data["Time Series (1min)"].keys())[0]
+                    price = data["Time Series (1min)"][latest_time]["1. open"]
+                    stock_data.append(f"{symbol}: ${float(price):.2f}")
+                else:
+                    stock_data.append(f"{symbol}: N/A")
+            return " | ".join(stock_data)
+        except Exception as e:
+            print("Error fetching stock data:", e)
+            return "Stock data unavailable"
+
     def run(self):
         # Create two canvases: one for the display and one for the buffer
         canvas = self.matrix
@@ -41,18 +60,27 @@ class GraphicsTest(SampleBase):
 
         ticker_font = graphics.Font()
         ticker_font.LoadFont("../../../fonts/6x10.bdf")
-        ticker_text = "Sample News Ticker: Scrolling Text Here! " * 3  # Adjust text as needed
         ticker_x = buffer.width
 
         white = graphics.Color(255, 255, 255)
         lat, lon = self.get_location()
         last_temperature = None
 
+        ticker_update_interval = 20  # Update ticker text every 600 seconds (10 minutes)
+        last_ticker_update = time.time()
+        
+        ticker_text = "Fetching stock data..."  # Initial placeholder text
+
         while True:
             now = datetime.now()
             display = now.strftime("%I:%M")
             month = now.strftime("%b").upper()
             day = now.strftime("%d")
+
+            # Update ticker text every 10 minutes
+            if time.time() - last_ticker_update > ticker_update_interval:
+                ticker_text = self.get_stock_data()
+                last_ticker_update = time.time()
 
             # Draw on the buffer
             buffer.Clear()
@@ -75,8 +103,8 @@ class GraphicsTest(SampleBase):
             # Swap buffer with canvas to update display
             buffer = self.matrix.SwapOnVSync(buffer)
 
-            # Sleep for 1 second to refresh the entire screen
-            time.sleep(0.05)
+            # Sleep for a short interval to update the ticker smoothly
+            time.sleep(0.05)  # Adjust as needed for smooth scrolling
 
 # Main function
 if __name__ == "__main__":
