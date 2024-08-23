@@ -5,14 +5,28 @@ import time
 from datetime import datetime, timedelta
 import requests
 import threading
+import json
+import os
 
 class GraphicsTest(SampleBase):
     def __init__(self, *args, **kwargs):
         super(GraphicsTest, self).__init__(*args, **kwargs)
         self.weather_api_key = "YOUR_WEATHER_API_KEY"  # Replace with your actual Weather API key
         self.polygon_api_key = "YOUR_POLYGON_API_KEY"  # Replace with your Polygon.io API key
-        self.stock_symbols = ["AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NFLX", "BA"]  # Add your stock symbols here
-        self.stock_prices = {symbol: None for symbol in self.stock_symbols}  # Initialize cache
+        self.stock_symbols = [
+            "AAPL", "GOOGL", "MSFT", "TSLA", "AMZN", "NFLX", "BA", "NVDA", "BABA", "FB", "V", "JPM", "JNJ", "WMT", "PG",
+            "DIS", "MA", "PYPL", "UNH", "HD", "VZ", "ADBE", "CMCSA", "NFLX", "PFE", "KO", "PEP", "T", "ABT", "CSCO",
+            "COST", "LLY", "AVGO", "MRK", "INTC", "XOM", "MCD", "NKE", "IBM", "CRM", "CVX", "TXN", "HON", "MDT", "WFC",
+            "QCOM", "ACN", "ORCL", "LIN", "SCHW", "SBUX", "UPS", "MS", "BLK", "PM", "RTX", "NEE", "AMGN", "MMM", "GS",
+            "CAT", "INTU", "AMAT", "BKNG", "TMO", "ISRG", "SPGI", "ZTS", "BA", "GE", "USB", "MU", "DE", "FDX", "CI",
+            "LOW", "DHR", "LMT", "SYK", "PLD", "ADI", "COP", "AMT", "AON", "FIS", "GILD", "VRTX", "CB", "C", "NOW",
+            "MMC", "TFC", "ADP", "DUK", "BDX", "CL", "TGT", "BMY", "ECL", "ITW", "APD", "CCI", "EW", "CME", "FISV",
+            "MSCI", "NSC", "MAR", "ICE", "MDLZ", "AEP", "EOG", "PGR", "MCO", "SO", "KDP", "A", "PPG", "ETN", "AIG",
+            "AZO", "CDW", "CMG", "DG", "EQIX", "HSY", "PH", "SHW", "SNPS", "WM", "ADM", "BAX", "AFL", "ALL", "BXP", 
+            "COF", "CPRT", "CTAS", "DD", "DLTR", "DTE", "EL", "EMR", "EXR", "FMC", "GLW", "HAS", "HUM", "IDXX", "IFF"
+        ]
+
+        self.stock_prices = self.load_stock_prices()  # Load cached prices
         self.last_update_times = {symbol: None for symbol in self.stock_symbols}  # Track last update times for each stock
         self.update_interval = timedelta(minutes=1)  # Update interval for each stock
         self.update_thread = threading.Thread(target=self.schedule_updates)
@@ -21,6 +35,24 @@ class GraphicsTest(SampleBase):
 
         self.last_temp_update = 0  # Timestamp for the last temperature update
         self.temp_update_interval = 20  # Temperature update interval in seconds
+
+    def load_stock_prices(self):
+        try:
+            if os.path.exists("stock_prices.json"):
+                with open("stock_prices.json", "r") as f:
+                    return json.load(f)
+            else:
+                return {symbol: None for symbol in self.stock_symbols}
+        except Exception as e:
+            print(f"Error loading stock prices: {e}")
+            return {symbol: None for symbol in self.stock_symbols}
+
+    def save_stock_prices(self):
+        try:
+            with open("stock_prices.json", "w") as f:
+                json.dump(self.stock_prices, f)
+        except Exception as e:
+            print(f"Error saving stock prices: {e}")
 
     def get_location(self):
         try:
@@ -57,11 +89,13 @@ class GraphicsTest(SampleBase):
                 price = recent_data['c']
                 self.stock_prices[symbol] = f"{symbol}: ${float(price):.2f}"
             else:
-                self.stock_prices[symbol] = f"{symbol}: N/A"
+                # Use cached price if available, otherwise set to N/A
+                self.stock_prices[symbol] = self.stock_prices.get(symbol, f"{symbol}: N/A")
             self.last_update_times[symbol] = datetime.now()
+            self.save_stock_prices()  # Save prices after each update
         except Exception as e:
             print(f"Error fetching stock data for {symbol}: {e}")
-            self.stock_prices[symbol] = f"{symbol}: N/A"
+            self.stock_prices[symbol] = self.stock_prices.get(symbol, f"{symbol}: N/A")
 
     def schedule_updates(self):
         while True:
