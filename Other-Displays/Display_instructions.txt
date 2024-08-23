@@ -1,0 +1,3 @@
+Go to https://home.openweathermap.org and make an account then paste the API key in under the weather slot
+Go to https://polygon.io/dashboard and make a free acount then paste the API key in the stock slot
+create stock_prices.json in the ~/rpi-rgb-led-matrix/bindings/python/samples folder and run sudo chmod 666 stock_prices.json
