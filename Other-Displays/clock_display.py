@@ -66,21 +66,16 @@ class GraphicsTest(SampleBase):
         lat, lon = self.get_location()
         last_temperature = None
 
-        ticker_update_interval = 20  # Update ticker text every 600 seconds (10 minutes)
+        ticker_update_interval = 15  # Update ticker text every 15 seconds (15 seconds)
         last_ticker_update = time.time()
         
-        ticker_text = "Fetching stock data..."  # Initial placeholder text
+        ticker_text = self.get_stock_data()  # Initial ticker text
 
         while True:
             now = datetime.now()
             display = now.strftime("%I:%M")
             month = now.strftime("%b").upper()
             day = now.strftime("%d")
-
-            # Update ticker text every 10 minutes
-            if time.time() - last_ticker_update > ticker_update_interval:
-                ticker_text = self.get_stock_data()
-                last_ticker_update = time.time()
 
             # Draw on the buffer
             buffer.Clear()
@@ -99,6 +94,8 @@ class GraphicsTest(SampleBase):
             ticker_x -= 1
             if ticker_x < -len(ticker_text) * 6:  # Adjust width as needed
                 ticker_x = buffer.width
+                # Fetch new stock data when ticker is fully off screen
+                ticker_text = self.get_stock_data()
 
             # Swap buffer with canvas to update display
             buffer = self.matrix.SwapOnVSync(buffer)
