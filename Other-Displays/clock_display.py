@@ -19,6 +19,9 @@ class GraphicsTest(SampleBase):
         self.update_thread.daemon = True
         self.update_thread.start()
 
+        self.last_temp_update = 0  # Timestamp for the last temperature update
+        self.temp_update_interval = 20  # Temperature update interval in seconds
+
     def get_location(self):
         try:
             response = requests.get('https://ipinfo.io/')
@@ -100,6 +103,26 @@ class GraphicsTest(SampleBase):
             display = now.strftime("%I:%M")
             month = now.strftime("%b").upper()
             day = now.strftime("%d")
+
+            # Fetch the temperature every 20 seconds
+            if time.time() - self.last_temp_update >= self.temp_update_interval:
+                if lat and lon:
+                    temperature = self.get_temperature(lat, lon)
+                    if temperature is not None:
+                        temp_display = f"{round(temperature)}°"
+                        if last_temperature != temp_display:
+                            last_temperature = temp_display
+                            temperature_changed = True
+                        else:
+                            temperature_changed = False
+                    else:
+                        temp_display = "N/A"
+                        temperature_changed = True
+                else:
+                    temp_display = "N/A"
+                    temperature_changed = True
+
+                self.last_temp_update = time.time()  # Update the timestamp
 
             # Draw on the buffer
             buffer.Clear()
