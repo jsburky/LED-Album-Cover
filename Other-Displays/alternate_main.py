@@ -3,8 +3,6 @@ import subprocess
 import threading
 import time
 
-# Alternate main function to use with other displays
-
 # Find the event for your USB keypad (use ls /dev/input/ to list input devices)
 # Replace '/dev/input/eventX' with the appropriate event number for your keypad
 dev = InputDevice('/dev/input/eventX')
@@ -70,6 +68,9 @@ def read_keypad():
             if key_event.keystate == key_event.key_down:
                 key = str(key_event.keycode[-1])
                 execute_command(key)
+
+# Automatically execute the command for key "2" on startup
+execute_command('2')
 
 # Start reading input from the keypad on a separate thread
 keypad_thread = threading.Thread(target=read_keypad)
