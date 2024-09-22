@@ -84,6 +84,8 @@
   - CLIENT_ID = 'YOUR_SPOTIFY_CLIENT_ID'
   - CLIENT_SECRET = 'YOUR_SPOTIFY_CLIENT_SECRET'
 - Then save file with ctrl o and exit with ctrl x
+- run nano pixel_data.txt and ctrl o ctri x to save and exit
+- run chmod a+rw pixel_data.txt
 
 ## Running from boot with keyboard input 
 - This allows for the code the be run without a monitor or ssh
@@ -102,6 +104,8 @@
 - Type sudo nano shutdown_services.sh
   - Copy over the contents of the file: shutdown_services.sh
   - Then save file with ctrl o and exit with ctrl x
+- Run sudo raspi-config
+  - Select System Options -> Boot/Auto Login -> Console Autologin
 - run: sudo systemctl daemon-reload
 - run: sudo chmod +x /home/ledboard/shutdown_services.sh
 - run: sudo systemctl start program_launcher.service
