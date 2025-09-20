@@ -8,25 +8,54 @@ import threading
 import json
 import os
 
+
 # Centered high to allow peeking over clouds
 SUN_ART = [
+    "              X                ",
+    "              X                ",
+    "              X                ",
+    "  X           X           X     ",
+    "   X          X          X      ",
+    "    X                   X      ",
+    "     X     XXXXXXX     X      ",
+    "      X  XXXXXXXXXXX  X       ",
+    "        XXXXXXXXXXXXX        ",
+    "       XXXXXXXXXXXXXXX       ",
+    "      XXXXXXXXXXXXXXXXX      ",
+    "XXXX  XXXXXXXXXXXXXXXXX  XXXX    ",
+    "      XXXXXXXXXXXXXXXXX      ",
+    "      XXXXXXXXXXXXXXXXX      ",
+    "       XXXXXXXXXXXXXXX       ",
+    "        XXXXXXXXXXXXX        ",
+    "      X  XXXXXXXXXXX  X       ",
+    "     X     XXXXXXX     X      ",
+    "    X                   X      ",
+    "   X          X          X      ",
+    "  X           X           X     ",
+    "              X                ",
+    "              X                ",
+    "              X                ",
+    "                              ",
+]
+
+PARTIAL_SUN_ART = [
     "                              ",
     "                              ",
     "                              ",
     "                              ",
     "                              ",
-    "           XXXXXX           ",
-    "         XXXXXXXXXX         ",
-    "        XXXXXXXXXXXX        ",
-    "       XXXXXXXXXXXXXX       ",
-    "      XXXXXXXXXXXXXXXX      ",
-    "      XXXXXXXXXXXXXXXX      ",
-    "      XXXXXXXXXXXXXXXX      ",
-    "      XXXXXXXXXXXXXXXX      ",
-    "       XXXXXXXXXXXXXX       ",
-    "        XXXXXXXXXXXX        ",
-    "         XXXXXXXXXX         ",
-    "           XXXXXX           ",
+    "           XXXXXXX          ",
+    "         XXXXXXXXXXX        ",
+    "        XXXXXXXXXXXXX       ",
+    "       XXXXXXXXXXXXXXX      ",
+    "      XXXXXXXXXXXXXXXXX     ",
+    "      XXXXXXXXXXXXXXXXX     ",
+    "      XXXXXXXXXXXXXXXXX     ",
+    "      XXXXXXXXXXXXXXXXX     ",
+    "       XXXXXXXXXXXXXXX      ",
+    "        XXXXXXXXXXXXX       ",
+    "         XXXXXXXXXXX        ",
+    "           XXXXXXX          ",
     "                              ",
     "                              ",
     "                              ",
@@ -440,7 +469,7 @@ class GraphicsTest(SampleBase):
 
                     elif condition == "Clouds":
                         if is_day:
-                            layers = [(SUN_ART, sun_yellow), (PARTIAL_CLOUD, day_cloud_gray)]
+                            layers = [(PARTIAL_SUN_ART, sun_yellow), (PARTIAL_CLOUD, day_cloud_gray)]
                         else:
                             layers = [(MOON_ART, moon_gray), (MOON_CLOUD_ART, night_cloud_gray)]
 
