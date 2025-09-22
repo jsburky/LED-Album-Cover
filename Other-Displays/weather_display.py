@@ -99,10 +99,6 @@ CLOUD_ART = [
     "                              ",
     "                              ",
     "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
     "             XXXXX            ",
     "          XXXXXXXXX           ",
     "     XXXXXXXXXXXXXXXXXXX      ",
@@ -111,6 +107,10 @@ CLOUD_ART = [
     "   XXXXXXXXXXXXXXXXXXXXXXX    ",
     "     XXXXXXXXXXXXXXXXXXXX     ",
     "       XXXXXXXXXXXXXXXX       ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
     "                              ",
     "                              ",
     "                              ",
@@ -194,14 +194,14 @@ RAIN_ART = [
     "                              ",
     "                              ",
     "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
     "     X    X    X    X         ",
     "    X    X    X    X          ",
     "   X    X    X    X           ",
     "  X    X    X    X            ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
     "                              ",
     "                              ",
 ]
@@ -222,24 +222,20 @@ SNOW_ART = [
     "                              ",
     "                              ",
     "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
     "    X   X       X   X         ",
     "     X X   X X   X X          ",
     "      X     X     X           ",
     "     X X   X X   X X          ",
     "    X   X       X   X         ",
     "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
 ]
 
 # Bolt positioned to emerge from the cloud
 BOLT_ART = [
-    "                              ",
-    "                              ",
-    "                              ",
-    "                              ",
     "                              ",
     "                              ",
     "                              ",
@@ -258,6 +254,10 @@ BOLT_ART = [
     "          XXX                 ",
     "         XXXX                 ",
     "          XX                  ",
+    "                              ",
+    "                              ",
+    "                              ",
+    "                              ",
     "                              ",
     "                              ",
 ]
@@ -423,7 +423,7 @@ class GraphicsTest(SampleBase):
         bolt_yellow = graphics.Color(255, 255, 0)
 
 
-        lat, lon = self.get_location()
+        # lat, lon = self.get_location()
 
         ticker_text = self.get_stock_data()
         self.last_weather_toggle_time = time.time()
@@ -463,7 +463,7 @@ class GraphicsTest(SampleBase):
                     condition = self.weather_data['condition']
                     is_day = self.weather_data['is_day']
                     layers = []
-
+                    condition = 'Rain'
                     if condition == "Clear":
                         layers = [(SUN_ART, sun_yellow)] if is_day else [(MOON_ART, moon_gray)]
 
