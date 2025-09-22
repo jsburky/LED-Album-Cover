@@ -8,7 +8,6 @@ import threading
 import json
 import os
 
-
 # Centered high to allow peeking over clouds
 SUN_ART = [
     "              X                ",
@@ -351,22 +350,44 @@ class GraphicsTest(SampleBase):
             return None
 
     def update_stock_price(self, symbol):
+        """Fetches last two trading days to determine price change."""
+        today = datetime.now()
+        # Look back 5 days to ensure we capture at least two trading days
+        to_date = (today - timedelta(days=1)).strftime('%Y-%m-%d')
+        from_date = (today - timedelta(days=5)).strftime('%Y-%m-%d')
+
+        url = f'https://api.polygon.io/v2/aggs/ticker/{symbol}/range/1/day/{from_date}/{to_date}'
+        params = {'apiKey': self.polygon_api_key, 'sort': 'desc', 'limit': 2}
+
         try:
-            url = f'https://api.polygon.io/v2/aggs/ticker/{symbol}/prev'
-            params = {'apiKey': self.polygon_api_key}
             response = requests.get(url, params=params)
+            response.raise_for_status() # Raise HTTPError for bad responses
             data = response.json()
+
+            status = 'flat'
+            price_text = f"{symbol}: N/A"
+
             if 'results' in data and len(data['results']) > 0:
-                recent_data = data['results'][0]
-                price = recent_data['c']
-                self.stock_prices[symbol] = f"{symbol}: ${float(price):.2f}"
-            else:
-                self.stock_prices[symbol] = self.stock_prices.get(symbol, f"{symbol}: N/A")
+                latest_close = data['results'][0]['c']
+                price_text = f"{symbol}: ${latest_close:.2f}"
+
+                if len(data['results']) > 1:
+                    previous_close = data['results'][1]['c']
+                    if latest_close > previous_close:
+                        status = 'up'
+                    elif latest_close < previous_close:
+                        status = 'down'
+
+            self.stock_prices[symbol] = {'text': price_text, 'status': status}
             self.last_update_times[symbol] = datetime.now()
             self.save_stock_prices()
-        except Exception as e:
-            print(f"Error fetching stock data for {symbol}: {e}")
-            self.stock_prices[symbol] = self.stock_prices.get(symbol, f"{symbol}: N/A")
+
+        except Exception:
+            self.logger.exception(f"Error fetching stock data for {symbol}")
+            # Use cached data if available on error
+            if symbol not in self.stock_prices:
+                self.stock_prices[symbol] = {'text': f"{symbol}: N/A", 'status': 'flat'}
+
 
     def schedule_updates(self):
         while True:
@@ -463,7 +484,7 @@ class GraphicsTest(SampleBase):
                     condition = self.weather_data['condition']
                     is_day = self.weather_data['is_day']
                     layers = []
-                    
+
                     if condition == "Clear":
                         layers = [(SUN_ART, sun_yellow)] if is_day else [(MOON_ART, moon_gray)]
 
