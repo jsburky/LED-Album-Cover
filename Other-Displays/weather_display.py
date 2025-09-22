@@ -423,7 +423,7 @@ class GraphicsTest(SampleBase):
         bolt_yellow = graphics.Color(255, 255, 0)
 
 
-        # lat, lon = self.get_location()
+        lat, lon = self.get_location()
 
         ticker_text = self.get_stock_data()
         self.last_weather_toggle_time = time.time()
