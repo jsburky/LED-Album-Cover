@@ -463,7 +463,7 @@ class GraphicsTest(SampleBase):
                     condition = self.weather_data['condition']
                     is_day = self.weather_data['is_day']
                     layers = []
-                    condition = 'Rain'
+                    
                     if condition == "Clear":
                         layers = [(SUN_ART, sun_yellow)] if is_day else [(MOON_ART, moon_gray)]
 
