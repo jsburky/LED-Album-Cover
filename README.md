@@ -118,4 +118,6 @@
 - Once Spotify is playing, the album cover should be displayed on the matrix
 - Please leave comments for errors and improvements.
 - Thanks to hzeller for creating the [matrix driver](https://github.com/hzeller/rpi-rgb-led-matrix)
+## Additional Displays
+- Wanted to add this in here. I have a subfolder called other_displays. The weather_and_stock_display.py file has a general display that shows weather data, date and time, and a stock ticker on the bottom. It can be used by replacing the code in main with the other main file in that folder and changing the filepath at 1 to match the name of the file you put the weather/stock code into. 
 
